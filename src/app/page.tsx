@@ -5,7 +5,7 @@ import { ConnectButton, MediaRenderer, TransactionButton, useActiveAccount, useR
 import thirdwebIcon from "@public/thirdweb.svg";
 import { client } from "./client";
 import { defineChain, getContract, toEther } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
+import { polygonAmoy } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { claimTo, getActiveClaimCondition, getTotalClaimedSupply, nextTokenIdToMint } from "thirdweb/extensions/erc721";
 import { useState } from "react";
@@ -14,7 +14,7 @@ export default function Home() {
   const account = useActiveAccount();
 
   // Replace the chain with the chain you want to connect to
-  const chain = defineChain( sepolia );
+  const chain = defineChain( polygonAmoy );
 
   const [quantity, setQuantity] = useState(1);
 
@@ -22,7 +22,7 @@ export default function Home() {
   const contract = getContract({
     client: client,
     chain: chain,
-    address: "0xBb1d78c8799b33c5791ED6e49B84429c7106759E"
+    address: "0x9AF7e08A48118139a624cF53C8cF4AC183648C71"
   });
 
   const { data: contractMetadata, isLoading: isContractMetadataLaoding } = useReadContract( getContractMetadata,
@@ -96,18 +96,27 @@ export default function Home() {
             >+</button>
           </div>
           <TransactionButton
-            transaction={() => claimTo({
-              contract: contract,
-              to: account?.address || "",
-              quantity: BigInt(quantity),
-            })}
-            onTransactionConfirmed={async () => {
-              alert("NFT Claimed!");
-              setQuantity(1);
-            }}
-          >
-            {`Claim NFT (${getPrice(quantity)} ETH)`}
-          </TransactionButton>
+  transaction={async () => {
+    const address = account?.address;
+
+    if (!address) {
+      throw new Error("Address is not available");
+    }
+
+    // Assuming `claimTo` is the function you want to call
+    return claimTo({
+      contract: contract,
+      to: address,
+      quantity: BigInt(quantity),
+    });
+  }}
+  onTransactionConfirmed={async () => {
+    alert("NFT Claimed!");
+    setQuantity(1);
+  }}
+>
+  {`Claim NFT (${getPrice(quantity)} ETH)`}
+</TransactionButton>
         </div>
       </div>
     </main>
