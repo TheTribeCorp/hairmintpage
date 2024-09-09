@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import { ConnectButton, MediaRenderer, TransactionButton, useActiveAccount, useReadContract } from "thirdweb/react";
-import thirdwebIcon from "@public/thirdweb.svg";
 import { client } from "./client";
 import { defineChain, getContract, toEther } from "thirdweb";
-import { polygonAmoy } from "thirdweb/chains";
+import { ethereum } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { claimTo, getActiveClaimCondition, getTotalClaimedSupply, nextTokenIdToMint } from "thirdweb/extensions/erc721";
 import { useState } from "react";
@@ -14,7 +13,7 @@ export default function Home() {
   const account = useActiveAccount();
 
   // Replace the chain with the chain you want to connect to
-  const chain = defineChain( polygonAmoy );
+  const chain = defineChain( ethereum );
 
   const [quantity, setQuantity] = useState(1);
 
@@ -22,7 +21,7 @@ export default function Home() {
   const contract = getContract({
     client: client,
     chain: chain,
-    address: "0x9AF7e08A48118139a624cF53C8cF4AC183648C71"
+    address: "0xC273D212869B8C89b764220296A74E13dDb40470"
   });
 
   const { data: contractMetadata, isLoading: isContractMetadataLaoding } = useReadContract( getContractMetadata,
@@ -47,9 +46,19 @@ export default function Home() {
   }
 
   return (
-    <main className="p-4 pb-10 min-h-[100vh] flex items-center justify-center container max-w-screen-lg mx-auto">
-	    <div className="py-20 text-center">
-        <Header />
+    <>
+      <main
+        className="p-4 pb-10 min-h-[100vh] flex items-center justify-center container max-w-screen-lg mx-auto"
+        style={{
+          backgroundImage: "url('/background.png')",
+          backgroundSize: "60%",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
+        }}
+      >
+        <div className="py-20 text-center bg-opacity-50 bg-black rounded-lg">
+          <Header />
         <ConnectButton
           client={client}
           chain={chain}
@@ -99,11 +108,10 @@ export default function Home() {
   transaction={async () => {
     const address = account?.address;
 
-    if (!address) {
-      throw new Error("Address is not available");
+    if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      throw new Error("Invalid or missing address");
     }
 
-    // Assuming `claimTo` is the function you want to call
     return claimTo({
       contract: contract,
       to: address,
@@ -117,27 +125,46 @@ export default function Home() {
 >
   {`Claim NFT (${getPrice(quantity)} ETH)`}
 </TransactionButton>
+
+            <a href="https://www.hairoftrump.com" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Home</a>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <footer className="bg-black text-white text-center py-4">
+        <div className="flex justify-center space-x-6">
+          <a href="https://x.com/hair_oftrump?s=21" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 4.557a9.9 9.9 0 01-2.828.775A4.932 4.932 0 0023.337 3.1a9.868 9.868 0 01-3.127 1.195 4.922 4.922 0 00-8.384 4.482A13.978 13.978 0 011.671 3.149a4.916 4.916 0 001.524 6.57 4.903 4.903 0 01-2.23-.616v.062a4.924 4.924 0 003.95 4.827 4.932 4.932 0 01-2.224.085 4.928 4.928 0 004.604 3.417 9.867 9.867 0 01-6.102 2.104c-.396 0-.788-.023-1.177-.069a13.94 13.94 0 007.548 2.213c9.142 0 14.307-7.72 14.307-14.421 0-.22-.005-.438-.014-.653A10.243 10.243 0 0024 4.557z" />
+            </svg>
+          </a>
+          <a href="https://t.me/hairoftrump" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.545 7.273l-1.636 7.727c-.122.567-.446.703-.904.436l-2.491-1.822-1.2.992c-.133.1-.244.182-.504.182l.18-2.55 4.633-4.189c.2-.18-.044-.283-.308-.103L8.73 13.1l-2.476-.773c-.538-.168-.55-.538.11-.79l9.718-3.75c.444-.164.832.108.664.686z" />
+            </svg>
+          </a>
+        </div>
+      </footer>
+    </>
   );
 }
 
 function Header() {
   return (
-    <header className="flex flex-row items-center">
-      <Image
-        src={thirdwebIcon}
-        alt=""
-        className="size-[150px] md:size-[150px]"
-        style={{
-          filter: "drop-shadow(0px 0px 24px #a726a9a8)",
-        }}
-      />
-
-      <h1 className="text-2xl md:text-6xl font-semibold md:font-bold tracking-tighter mb-6 text-zinc-100">
-        NFT Claim App
-      </h1>
+    <header className="flex items-center justify-between w-full p-4">
+      <div>
+      <h1 className="text-xl md:text-4xl font-semibold md:font-bold text-center text-zinc-50">
+  GOLDEN STRANDS OF POWER
+</h1>
+      </div>
+      <div className="rounded-full border-2 border-gray-400 p-1">
+        <Image
+          src="/Logo.png" // Ensure that 'Logo.png' is in your 'public' directory
+          alt="Logo"
+          width={50}
+          height={50}
+          className="rounded-full"
+        />
+      </div>
     </header>
   );
 }
