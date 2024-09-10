@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/mint",
+        "destination": "https://mint.hairoftrump.com",
+        "permanent": true
+      }
+    ]
+  }
+  
