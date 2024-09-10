@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ConnectButton, MediaRenderer, TransactionButton, useActiveAccount, useReadContract } from "thirdweb/react";
+import thirdwebIcon from "@public/thirdweb.svg";
 import { client } from "./client";
 import { defineChain, getContract, toEther } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
@@ -58,7 +59,8 @@ export default function Home() {
         }}
       >
         <div className="py-20 text-center bg-opacity-50 bg-black rounded-lg">
-          <Header />
+        <div className="py-20 text-center">
+        <Header />
         <ConnectButton
           client={client}
           chain={chain}
@@ -108,13 +110,14 @@ export default function Home() {
   transaction={async () => {
     const address = account?.address;
 
+    // Check if address is valid and follows the Ethereum address format
     if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      throw new Error("Invalid or missing address");
+      throw new Error("Invalid or missing Ethereum address");
     }
 
     return claimTo({
       contract: contract,
-      to: address,
+      to: address,  // Now it's guaranteed to be a valid Ethereum address
       quantity: BigInt(quantity),
     });
   }}
@@ -126,7 +129,9 @@ export default function Home() {
   {`Claim NFT (${getPrice(quantity)} ETH)`}
 </TransactionButton>
 
+
             <a href="https://www.hairoftrump.com" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Home</a>
+          </div>
           </div>
         </div>
       </main>
@@ -150,11 +155,11 @@ export default function Home() {
 
 function Header() {
   return (
-    <header className="flex items-center justify-between w-full p-4">
-      <div>
-      <h1 className="text-xl md:text-4xl font-semibold md:font-bold text-center text-zinc-50">
-  GOLDEN STRANDS OF POWER
-</h1>
+    <header className="flex flex-col items-center justify-center w-full p-4">
+      <div className="py-20 text-center">
+        <h1 className="text-xl md:text-4xl font-semibold md:font-bold text-center text-zinc-100">
+          GOLDEN STRANDS OF POWER
+        </h1>
       </div>
       <div className="rounded-full border-2 border-gray-400 p-1">
         <Image
